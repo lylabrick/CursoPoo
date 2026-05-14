@@ -17,3 +17,9 @@ Cuando lo usás para evitar pasar dependencias correctamente (es estado global d
 Cuando dificulta el testing porque no podés reemplazarlo por un mock
 Cuando hay múltiples contextos de ejecución (múltiples classloaders, microservicios) donde la "única instancia" deja de serlo
 Cuando el objeto no tiene razón real de ser único y lo forzás por comodidad
+
+2.	Factory Method — Exportadores de documentos. Modelar una jerarquía de
+exportadores (ExportadorPDF, ExportadorHTML, ExportadorMarkdown).
+La clase base Exportador declara el factory method crearFormateador().
+Cada subclase lo sobreescribe para instanciar el formateador correcto.
+Agregar un nuevo formato sin modificar el código cliente.

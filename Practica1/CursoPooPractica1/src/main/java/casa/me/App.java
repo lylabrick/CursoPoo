@@ -1,49 +1,38 @@
 package casa.me;
 // Main.java
 
-import singleton.ConfiguracionApp;
+import exportador.Exportador;
+import exportador.impl.ExportadorCSV;
+import exportador.impl.ExportadorHTML;
+import exportador.impl.ExportadorMarkdown;
+import exportador.impl.ExportadorPDF;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
+import java.util.List;
 
 public class App {
 
-    public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("=== Demo Singleton ===\n");
+    public static void main(String[] args) {
 
-        // ── 1. Uso básico ──────────────────────────────
-        ConfiguracionApp config = ConfiguracionApp.getInstancia();
-        config.setHost("produccion.unlp.edu.ar");
-        config.setPuerto(443);
-        config.setModoDebug(true);
+        String titulo    = "Informe Académico UNLP 2026";
+        String cuerpo    = "Este informe resume los resultados del primer cuatrimestre.";
+        String[] secciones = { "Introducción", "Metodología", "Resultados", "Conclusiones" };
 
-        System.out.println("Instancia 1: " + config);
+        // ── Código cliente: solo conoce Exportador ──
+        // No sabe nada de Formateador ni de sus implementaciones.
+        // Para agregar CSV bastó crear dos clases nuevas,
+        // sin modificar Main ni Exportador.
+        List<Exportador> exportadores = List.of(
+                new ExportadorPDF(),
+                new ExportadorHTML(),
+                new ExportadorMarkdown(),
+                new ExportadorCSV()     // nuevo formato — cero cambios en el cliente
+        );
 
-        // Obtener de nuevo — debe ser la misma instancia
-        ConfiguracionApp config2 = ConfiguracionApp.getInstancia();
-        System.out.println("Instancia 2: " + config2);
-        System.out.println("¿Son la misma instancia? " + (config == config2));
-
-        // ── 2. Prueba con múltiples threads ────────────
-        System.out.println("\n=== Prueba con 10 threads concurrentes ===\n");
-
-        ExecutorService pool = Executors.newFixedThreadPool(10);
-
-        for (int i = 0; i < 10; i++) {
-            final int numero = i;
-            pool.submit(() -> {
-                ConfiguracionApp c = ConfiguracionApp.getInstancia();
-                System.out.printf("Thread %d obtuvo instancia@%s%n",
-                        numero, Integer.toHexString(System.identityHashCode(c)));
-            });
+        for (Exportador exportador : exportadores) {
+            System.out.println("─".repeat(50));
+            String resultado = exportador.exportarDocumento(titulo, cuerpo, secciones);
+            System.out.println(resultado);
         }
-
-        pool.shutdown();
-        pool.awaitTermination(5, TimeUnit.SECONDS);
-
-        // Todos los hashcodes deben ser iguales — una sola instancia
     }
 }
