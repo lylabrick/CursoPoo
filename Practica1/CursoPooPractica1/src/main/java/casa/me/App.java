@@ -1,38 +1,26 @@
 package casa.me;
-// Main.java
 
-import exportador.Exportador;
-import exportador.impl.ExportadorCSV;
-import exportador.impl.ExportadorHTML;
-import exportador.impl.ExportadorMarkdown;
-import exportador.impl.ExportadorPDF;
-
-import java.util.List;
+import abstractfactoryui.client.FormularioLogin;
+import abstractfactoryui.configtheme.SelectorTema;
+import abstractfactoryui.theme.FabricaTema;
 
 public class App {
-
-
     public static void main(String[] args) {
 
-        String titulo    = "Informe Académico UNLP 2026";
-        String cuerpo    = "Este informe resume los resultados del primer cuatrimestre.";
-        String[] secciones = { "Introducción", "Metodología", "Resultados", "Conclusiones" };
+        // Simular que el tema viene de configuración externa
+        String[] temas = { "claro", "oscuro" , "altocontraste" };
 
-        // ── Código cliente: solo conoce Exportador ──
-        // No sabe nada de Formateador ni de sus implementaciones.
-        // Para agregar CSV bastó crear dos clases nuevas,
-        // sin modificar Main ni Exportador.
-        List<Exportador> exportadores = List.of(
-                new ExportadorPDF(),
-                new ExportadorHTML(),
-                new ExportadorMarkdown(),
-                new ExportadorCSV()     // nuevo formato — cero cambios en el cliente
-        );
+        for (String nombreTema : temas) {
+            System.out.println("═".repeat(60));
+            System.out.println("  Tema: " + nombreTema.toUpperCase());
+            System.out.println("═".repeat(60));
 
-        for (Exportador exportador : exportadores) {
-            System.out.println("─".repeat(50));
-            String resultado = exportador.exportarDocumento(titulo, cuerpo, secciones);
-            System.out.println(resultado);
+            FabricaTema fabrica = SelectorTema.obtener(nombreTema);
+
+            // FormularioLogin no sabe qué tema está usando
+            FormularioLogin formulario = new FormularioLogin(fabrica);
+            formulario.mostrar();
+            formulario.simularInteraccion();
         }
     }
 }
