@@ -38,3 +38,26 @@ garantizando que todos son coherentes entre sí — no podés mezclar accidental
 BotonClaro con un PanelOscuro.
 
 ![img.png](img.png)
+
+<h1>Builder con Inner Class</h1>
+Documento es el contenedor grande porque BuilderDocumento y Seccion viven adentro como 
+clases internas — por eso ocupan espacio físico dentro de su rect. 
+El build() crea una instancia de Documento pasándose a sí mismo (new Documento(this)), 
+y la clave de la interfaz fluida es que cada setter retorna this, lo que permite encadenar llamadas. 
+El Director solo habla con Builder, nunca toca Documento directamente. Y el Cliente (Main) instancia 
+el Builder y es el único que lo opera.
+
+![img_2.png](img_2.png)
+
+<h1>Builder con interfaces</h1>
+El patrón define 4 interfaces
+(ISeccion, IDocumento, IBuilderDocumento, IDirector) que son los contratos del sistema.
+El patrón define 4 interfaces (ISeccion, IDocumento, IBuilderDocumento, IDirector) que son los 
+contratos del sistema. Seccion y Documento son los productos: Seccion representa una parte del 
+documento, y Documento tiene constructor package-private para que solo el Builder pueda instanciarlo.
+BuilderDocumento acumula los campos opcionalmente y con cada setter retorna this, habilitando el 
+encadenamiento fluido; al final build() valida y construye el Documento. DirectorDocumentos recibe 
+un IBuilderDocumento por constructor y encapsula recetas predefinidas (informe ejecutivo, acta de 
+reunión) sin saber cómo se ensambla internamente. El Main solo habla con interfaces, nunca con 
+clases concretas, lo que permite reemplazar cualquier implementación sin tocar el resto.
+![img_5.png](img_5.png)
