@@ -60,4 +60,5 @@ encadenamiento fluido; al final build() valida y construye el Documento. Directo
 un IBuilderDocumento por constructor y encapsula recetas predefinidas (informe ejecutivo, acta de 
 reunión) sin saber cómo se ensambla internamente. El Main solo habla con interfaces, nunca con 
 clases concretas, lo que permite reemplazar cualquier implementación sin tocar el resto.
+
 ![img_5.png](img_5.png)
